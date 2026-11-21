@@ -1,0 +1,23 @@
+name: restock-watch
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check stock
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          NAME="まな板（テスト）"
+          URL="https://mailivis.jp/shop/g/gYNJ270207OT/"
+          CODE="YNJ270207OT"
+          HTML=$(curl -s -m 20 -A "Mozilla/5.0" "$URL")
+          if echo "$HTML" | grep -q "$CODE" && echo "$HTML" | grep -q "カートに入れる"; then
+            curl -s -H "Click: $URL" -H "Priority: 5" \
+              -d "$NAME が買えるかも！タップして商品ページへ" \
+              "https://ntfy.sh/$NTFY_TOPIC"
+          fi
