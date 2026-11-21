@@ -12,9 +12,9 @@ jobs:
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
         run: |
-          NAME="まな板（テスト）"
-          URL="https://mailivis.jp/shop/g/gYNJ270207OT/"
-          CODE="YNJ270207OT"
+          NAME="茶娘"
+          URL="https://mailivis.jp/shop/g/gYNJ270206OT/"
+          CODE="YNJ270206OT"
           HTML=$(curl -s -m 20 -A "Mozilla/5.0" "$URL")
           if echo "$HTML" | grep -q "$CODE" && echo "$HTML" | grep -q "カートに入れる"; then
             curl -s -H "Click: $URL" -H "Priority: 5" \
