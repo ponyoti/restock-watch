@@ -14,8 +14,8 @@ jobs:
         run: |
           URL="https://l-tike.com/order/?gLcode=73512&gPfKey=20260204000002133125,20260204000002133126,20260204000002133127&gEntryMthd=02&gScheduleNo=2&gCarrierCd=01&gPfName=%EF%BC%AD%EF%BC%81%EF%BC%AC%EF%BC%AB&gBaseVenueCd=32946"
           PATTERN="発売前"
-          CODE=$(curl -s -m 20 -A "Mozilla/5.0" -o page.html -w "%{http_code}" "$URL")
-          STATUS=$(grep -o 'data-status-name="[^"]*"' page.html | head -1)
+          CODE=$(curl -s -m 20 --http1.1 -A "Mozilla/5.0" -o page.html -w "%{http_code}" "$URL") || CODE="curl-failed(exit $?)"
+          STATUS=$(grep -o 'data-status-name="[^"]*"' page.html 2>/dev/null | head -1 || true)
           echo "HTTP: $CODE / $STATUS"
           if echo "$STATUS" | grep -qE "$PATTERN"; then
             curl -s -H "Click: $URL" -H "Priority: 5" \
